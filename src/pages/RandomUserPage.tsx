@@ -9,12 +9,16 @@ export default function RandomUserPage() {
 
   const generateBtnOnClick = async () => {
     setIsLoading(true);
+    // แก้ไข: ใช้ backticks (` `) แทน
     const resp = await axios.get(
       `https://randomuser.me/api/?results=${genAmount}`
     );
     setIsLoading(false);
-    const users = resp.data.results;
-    const cleanUsers = users.map((user: any) => cleanUser(user));
+    // แก้ไข: ประกาศตัวแปรใหม่เพื่อรับค่าจาก API
+    const rawUsers = resp.data.results;
+    // แก้ไข: ใช้ .map เพื่อเรียกฟังก์ชัน cleanUser
+    const cleanUsers = rawUsers.map((user: any) => cleanUser(user));
+    // แก้ไข: อัปเดต state ด้วยข้อมูลที่ clean แล้ว
     setUsers(cleanUsers);
   };
 
@@ -37,16 +41,16 @@ export default function RandomUserPage() {
       {isLoading && (
         <p className="display-6 text-center fst-italic my-4">Loading ...</p>
       )}
-      {users &&
-        !isLoading &&
-        users.map((users: any) => (
-          <UserCard
-            name={users.name}
-            imgUrl={users.imgUrl}
-            address={users.address}
-            email={users.email}
-          />
-        ))}
+      {/* แก้ไข: ใช้ users ที่เป็น state ในการวนลูป */}
+      {!isLoading && users.map((user: any, index: number) => (
+        <UserCard
+          key={index}
+          name={user.name}
+          imgUrl={user.imgUrl}
+          address={user.address}
+          email={user.email}
+        />
+      ))}
     </div>
   );
 }
