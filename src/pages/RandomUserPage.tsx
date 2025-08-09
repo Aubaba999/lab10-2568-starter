@@ -3,7 +3,7 @@ import { cleanUser } from "../libs/CleanUser";
 import axios from "axios";
 import { useState } from "react";
 export default function RandomUserPage() {
-  const [users, setUsers] = useState("");
+  const [users, setUsers] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [genAmount, setGenAmount] = useState(1);
 
@@ -14,9 +14,8 @@ export default function RandomUserPage() {
     );
     setIsLoading(false);
     const users = resp.data.results;
-    //Your code here
-    //Process result from api response with map function. Tips use function from /src/libs/CleanUser
-    //Then update state with function : setUsers(...)
+    const cleanUsers = users.map((user: any) => cleanUser(user));
+    setUsers(cleanUsers);
   };
 
   return (
@@ -38,7 +37,16 @@ export default function RandomUserPage() {
       {isLoading && (
         <p className="display-6 text-center fst-italic my-4">Loading ...</p>
       )}
-      {users && !isLoading && users.map(/*code map rendering UserCard here */)}
+      {users &&
+        !isLoading &&
+        users.map((users: any) => (
+          <UserCard
+            name={users.name}
+            imgUrl={users.imgUrl}
+            address={users.address}
+            email={users.email}
+          />
+        ))}
     </div>
   );
 }
